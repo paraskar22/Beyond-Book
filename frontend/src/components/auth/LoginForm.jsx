@@ -37,7 +37,7 @@ const LoginForm = () => {
       toast.success("Login successful!");
       navigate("/dashboard");
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || "An error occurred during login";
+      const errorMessage = err.response?.data?.error || err.message || "Invalid credentials. Please check your email and password.";
       setError(errorMessage);
       toast.error(errorMessage);
       console.error('Login error details:', {

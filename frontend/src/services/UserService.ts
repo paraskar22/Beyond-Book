@@ -10,6 +10,7 @@ interface User {
 
 interface AuthResponse {
   success: boolean;
+  message?: string;
   data: {
     token: string;
     user: User;
@@ -21,44 +22,60 @@ const login = async (
   password: string
 ): Promise<AuthResponse> => {
   try {
-    const response = await http.post<AuthResponse>("/api/auth/login", {
+    const response = await http.post<AuthResponse>("/auth/login", {
       email,
       password,
     });
-    if (response.data.data.token) {
-      localStorage.setItem("token", response.data.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.data.user));
+
+    const { token, user } = response.data.data;
+
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
     }
+
     return response.data;
   } catch (error: any) {
-    throw error.response?.data || { message: "An error occurred during login" };
+    console.error("Login error:", error);
+    throw (
+      error?.response?.data || { message: "An error occurred during login" }
+    );
   }
 };
 
 const register = async (
   name: string,
-  userName: string,
+  username: string,
   email: string,
   password: string
 ): Promise<AuthResponse> => {
   try {
-    const response = await http.post<AuthResponse>("/api/auth/register", {
+    const response = await http.post<AuthResponse>("/auth/register", {
       name,
-      userName,
+      username,
       email,
       password,
     });
-    if (response.data.data.token) {
-      localStorage.setItem("token", response.data.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.data.user));
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Registration failed");
     }
+
+    const { token, user } = response.data.data;
+
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+
     return response.data;
   } catch (error: any) {
-    throw (
-      error.response?.data || {
-        message: "An error occurred during registration",
-      }
-    );
+    console.error("Registration error:", error);
+    const errorMessage =
+      error?.response?.data?.message ||
+      error.message ||
+      "An error occurred during registration";
+    throw new Error(errorMessage);
   }
 };
 

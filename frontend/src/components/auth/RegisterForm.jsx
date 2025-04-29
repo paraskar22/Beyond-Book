@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
 import UserService from "../../services/UserService.ts";
 import {
   validateEmail,
   validatePassword,
-  validateUsername,
+  validateUserName,
 } from "../../utils/validation";
 import "./RegisterForm.css";
 import { toast } from "react-toastify";
 
 const RegisterForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     userName: "",
@@ -22,7 +25,6 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkAuth = () => {
       try {
         const user = UserService.getCurrentUser();
@@ -33,15 +35,15 @@ const RegisterForm = () => {
         console.error("Error checking authentication:", error);
       }
     };
-
     checkAuth();
   }, [navigate]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -49,42 +51,57 @@ const RegisterForm = () => {
     setError("");
     setLoading(true);
 
-    // Validate userName
-    if (!validateUsername(formData.userName)) {
+    // Client-side validations
+    if (!validateUserName(formData.userName)) {
       setError(
-        "userName must be 3-20 characters long and contain only letters, numbers, and underscores"
+        "Username must be 3–20 characters with letters, numbers, or underscores."
       );
       setLoading(false);
       return;
     }
 
-    // Validate email
     if (!validateEmail(formData.email)) {
-      setError("Please enter a valid email address");
+      setError("Please enter a valid email address.");
       setLoading(false);
       return;
     }
 
-    // Check if passwords match
+    if (!validatePassword(formData.password)) {
+      setError(
+        "Password must be at least 8 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., !@#$%^&*).\nExample: Pari@12345"
+      );
+      setLoading(false);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       setLoading(false);
       return;
     }
 
     try {
-      await UserService.register(
+      const response = await UserService.register(
         formData.name,
         formData.userName,
         formData.email,
         formData.password
       );
-      toast.success("Registration successful!");
-      navigate("/dashboard");
+
+      if (response.success) {
+        toast.success("Registration successful!");
+        navigate("/dashboard");
+      } else {
+        throw new Error(response.message || "Registration failed");
+      }
     } catch (err) {
-      console.log(err);
-      setError(err.message || "An error occurred during registration");
-      toast.error(err.message || "Registration failed");
+      console.error("Registration error:", err);
+      const errorMessage =
+        err?.response?.data?.message ||
+        err.message ||
+        "Registration failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -94,6 +111,7 @@ const RegisterForm = () => {
     <div className="register-form-container">
       <h2>Register</h2>
       {error && <div className="error-message">{error}</div>}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="name">Full Name</label>
@@ -107,11 +125,12 @@ const RegisterForm = () => {
             disabled={loading}
           />
         </div>
+
         <div className="form-group">
-          <label htmlFor="userName">userName</label>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
-            id="userName"
+            id="username"
             name="userName"
             value={formData.userName}
             onChange={handleChange}
@@ -119,6 +138,7 @@ const RegisterForm = () => {
             disabled={loading}
           />
         </div>
+
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
@@ -131,36 +151,60 @@ const RegisterForm = () => {
             disabled={loading}
           />
         </div>
+
         <div className="form-group">
           <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              disabled={loading}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
+
         <div className="form-group">
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <div className="password-input-container">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              disabled={loading}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
+
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
       </form>
+
       <div className="form-links">
-        <a href="/login">Already have an account? Login</a>
+        <Link to="/auth/login">Already have an account? Login</Link>
       </div>
     </div>
   );

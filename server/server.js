@@ -8,16 +8,17 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
+// Simple welcome route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the server." });
 });
 
-require("./app/routes/user.routes.js")(app);
+// Mount auth routes under /api/auth
+const authRoutes = require("./app/routes/user.routes.js");
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

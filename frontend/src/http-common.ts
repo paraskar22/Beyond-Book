@@ -1,52 +1,48 @@
 import axios from "axios";
 
-// Set base URL to match your backend - adjust this URL if your backend is hosted elsewhere
+// Base API configuration
 const http = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "http://localhost:8080/api", // 🔁 Change this if backend is deployed
   headers: {
-    "Content-type": "application/json",
+    "Content-Type": "application/json",
   },
-  // Add timeout to prevent endless waiting
-  timeout: 15000,
+  timeout: 15000, // 15s timeout to avoid hanging requests
 });
 
-// Add a request interceptor to include the auth token in the headers
+// Attach JWT token to every request if available
 http.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-    if (token) {
+    if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    console.error("Request error:", error);
+    console.error("Request setup error:", error);
     return Promise.reject(error);
   }
 );
 
-// Add response interceptor for debugging
+// Global response logging and error handling
 http.interceptors.response.use(
   (response) => {
-    console.log("API Success:", response.config.url, response.status);
+    console.log(`✅ API Success: [${response.status}] ${response.config.url}`);
     return response;
   },
   (error) => {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // outside of the range of 2xx
+      // Server responded with a non-2xx status
       console.error(
-        "API Error Response:",
-        error.config?.url,
-        error.response.status,
+        `❌ API Error Response: [${error.response.status}] ${error.config?.url}`,
         error.response.data
       );
     } else if (error.request) {
-      // The request was made but no response was received
-      console.error("API No Response:", error.config?.url, error.request);
+      // No response received from the server
+      console.error("❌ API No Response:", error.config?.url, error.request);
     } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error("API Request Setup Error:", error.message);
+      // Something went wrong in setting up the request
+      console.error("❌ API Request Setup Error:", error.message);
     }
     return Promise.reject(error);
   }

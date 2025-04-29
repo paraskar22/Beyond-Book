@@ -1,4 +1,5 @@
+// auth.config.js
 module.exports = {
-  secret: "wtc-secret-key",
-  jwtExpiration: 86400,
+  secret: process.env.JWT_SECRET || "dev-secret-key",
+  jwtExpiration: "24h", // Token expires in 24 hours
 };
