@@ -1,353 +1,226 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaBook, FaUsers, FaComments, FaCalendarAlt, FaStar, FaArrowRight, FaUserFriends, FaStore, FaRegCalendarAlt } from 'react-icons/fa';
-import './Home.css';
-import Navbar from '../components/Navbar';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { homeContent } from "../data/content";
+import bookClubsImage from "../assets/images/book-clubs.jpeg";
+import "./Home.css";
 
-function Home() {
+const Home = () => {
+  const [bookClubs, setBookClubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchBookClubs = async () => {
+      try {
+        const response = await fetch('/api/book-clubs/featured');
+        if (!response.ok) {
+          throw new Error('Failed to fetch book clubs');
+        }
+        const data = await response.json();
+        setBookClubs(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookClubs();
+  }, []);
+
+  const handleJoinBookClub = async (clubId) => {
+    try {
+      const response = await fetch('/api/book-clubs/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ clubId }),
+        credentials: 'include', // Include cookies for authentication
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to join book club');
+      }
+
+      // Update the book clubs list after joining
+      const updatedClubs = bookClubs.map(club => 
+        club.id === clubId ? { ...club, isMember: true } : club
+      );
+      setBookClubs(updatedClubs);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="home">
-      <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <FeaturesSection />
-      <CommunitySection />
-      <EventsSection />
-      <TestimonialsSection />
-      <CtaSection />
-      {/* Footer component will be added later */}
-    </div>
-  );
-}
-
-// Hero Section
-function HeroSection() {
-  return (
-    <section className="hero">
-      <div className="container">
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="hero-background">
+          <img 
+            src={bookClubsImage}
+            alt="Book club meeting"
+            className="hero-image"
+          />
+          <div className="hero-overlay"></div>
+        </div>
         <div className="hero-content">
           <h1>Welcome to Beyond the Book</h1>
-          <p>Where reading becomes a shared adventure. Join our community of book lovers, explore new worlds, and connect with fellow readers.</p>
+          <p>Discover, discuss, and connect with fellow book lovers</p>
           <div className="hero-buttons">
-            <Link to="/book-clubs" className="btn btn-primary">Explore Book Clubs</Link>
-            <Link to="/recommendations" className="btn btn-secondary">Get Recommendations</Link>
+            <Link to="/auth/register" className="btn primary">
+              Get Started
+            </Link>
+            <Link to="/features" className="btn secondary">
+              Learn More
+            </Link>
+            {bookClubs.length > 0 && (
+              <button 
+                className="btn book-club-btn"
+                onClick={() => handleJoinBookClub(bookClubs[0].id)}
+                disabled={bookClubs[0]?.isMember}
+              >
+                {bookClubs[0]?.isMember ? 'Already Joined' : 'Join Featured Book Club'}
+              </button>
+            )}
           </div>
+          {error && <div className="error-message">{error}</div>}
+          {loading && <div className="loading-spinner">Loading...</div>}
         </div>
-        <div className="hero-image">
-          <div className="book-stack-visual"></div>
-        </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-// About Section
-function AboutSection() {
-  return (
-    <section className="about-section">
-      <div className="container">
-        <div className="about-content">
-          <h2>About Beyond the Book</h2>
-          <p>Founded in 2023, Beyond the Book is more than just a reading platform. We're a vibrant community dedicated to bringing readers together, celebrating literature in all its forms, and creating meaningful connections through the power of books.</p>
-          <p>Our mission is to transform the solitary act of reading into a shared experience that enriches lives and broadens perspectives.</p>
-          <div className="about-stats">
-            <div className="stat-item">
-              <span className="stat-number">50K+</span>
-              <span className="stat-label">Readers</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">10K+</span>
-              <span className="stat-label">Books Discussed</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">5K+</span>
-              <span className="stat-label">Author Engagements</span>
-            </div>
-          </div>
-        </div>
-        <div className="about-image">
-          <div className="image-placeholder"></div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Features Section
-function FeaturesSection() {
-  const features = [
-    {
-      icon: <FaUsers />,
-      title: "Book Clubs",
-      description: "Join vibrant discussions with readers who share your literary interests, from classic literature to the latest bestsellers."
-    },
-    {
-      icon: <FaStar />,
-      title: "Personalized Recommendations",
-      description: "Discover your next favorite read with our AI-powered recommendation system tailored to your unique reading preferences."
-    },
-    {
-      icon: <FaUserFriends />,
-      title: "Author Engagement",
-      description: "Connect directly with your favorite authors through exclusive Q&A sessions, virtual book signings, and live readings."
-    },
-    {
-      icon: <FaStore />,
-      title: "Book Marketplace",
-      description: "Browse, buy, sell, or trade books with other members in our community-driven marketplace."
-    }
-  ];
-
-  return (
-    <section className="features-section">
-      <div className="container">
-        <h2>What We Offer</h2>
-        <p className="section-subtitle">Discover all the ways you can engage with literature and fellow readers</p>
-        
+      {/* Features Section */}
+      <section id="features" className="features">
+        <h2 className="section-title">Explore Our Features</h2>
         <div className="features-grid">
-          {features.map((feature, index) => (
-            <div className="feature-card" key={index}>
+          {homeContent.features.map((feature) => (
+            <Link to={feature.link} key={feature.id} className="feature-card">
               <div className="feature-icon">{feature.icon}</div>
+              <img
+                src={feature.image}
+                alt={feature.title}
+                className="feature-image"
+              />
               <h3>{feature.title}</h3>
               <p>{feature.description}</p>
-              <Link to={`/${feature.title.toLowerCase().replace(' ', '-')}`} className="feature-link">
-                Learn more <FaArrowRight className="arrow-icon" />
-              </Link>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Reading Challenges Section */}
+      <section className="challenges">
+        <h2 className="section-title">{homeContent.readingChallenges.title}</h2>
+        <p className="section-description">
+          {homeContent.readingChallenges.description}
+        </p>
+        <div className="challenges-grid">
+          {homeContent.readingChallenges.challenges.map((challenge) => (
+            <div key={challenge.id} className="challenge-card">
+              <div className="challenge-badge">{challenge.badge}</div>
+              <h3>{challenge.title}</h3>
+              <p>{challenge.books} books to read</p>
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-// Community Section
-function CommunitySection() {
-  return (
-    <section className="community-section">
-      <div className="container">
-        <div className="community-content">
-          <h2>Join Our Growing Community</h2>
-          <p>Connect with book lovers from around the world, share your reading journey, and discover new perspectives. Our community celebrates diverse voices and fosters meaningful conversations about literature.</p>
-          
-          <div className="community-stats">
-            <div className="stat-card">
-              <FaUsers className="stat-icon" />
-              <div className="stat-number">15K+</div>
-              <div className="stat-label">Active Members</div>
-            </div>
-            
-            <div className="stat-card">
-              <FaBook className="stat-icon" />
-              <div className="stat-number">500+</div>
-              <div className="stat-label">Book Clubs</div>
-            </div>
-            
-            <div className="stat-card">
-              <FaComments className="stat-icon" />
-              <div className="stat-number">2M+</div>
-              <div className="stat-label">Discussions</div>
-            </div>
-            
-            <div className="stat-card">
-              <FaCalendarAlt className="stat-icon" />
-              <div className="stat-number">300+</div>
-              <div className="stat-label">Monthly Events</div>
-            </div>
-          </div>
-          
-          <div className="community-quote">
-            <blockquote>
-              "Reading is not just about books; it's about connecting, sharing, and growing together."
-            </blockquote>
-            <cite>— Book Lovers Community</cite>
-          </div>
-          
-          <Link to="/book-clubs" className="btn btn-primary">
-            Explore Book Clubs
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Events Section
-function EventsSection() {
-  const upcomingEvents = [
-    {
-      title: "Fantasy Book Club: Dragons & Myths",
-      date: "April 22, 2025",
-      time: "7:00 PM EST",
-      type: "Virtual"
-    },
-    {
-      title: "Author Spotlight: Sarah Johnson",
-      date: "April 25, 2025",
-      time: "6:30 PM EST",
-      type: "Live Q&A"
-    },
-    {
-      title: "Classic Literature Deep Dive",
-      date: "May 3, 2025",
-      time: "3:00 PM EST",
-      type: "Discussion"
-    }
-  ];
-
-  return (
-    <section className="events-section">
-      <div className="container">
-        <h2>Upcoming Events</h2>
-        <p className="section-subtitle">Join our virtual and in-person gatherings to discuss, learn, and connect</p>
-        
-        <div className="events-grid">
-          {upcomingEvents.map((event, index) => (
-            <div className="event-card" key={index}>
-              <div className="event-date">
-                <FaRegCalendarAlt />
-                <span>{event.date}</span>
+      {/* Upcoming Events Section */}
+      <section className="events-section">
+        <div className="container">
+          <h2>{homeContent.upcomingEvents.title}</h2>
+          <p className="section-subtitle">
+            {homeContent.upcomingEvents.description}
+          </p>
+          <div className="events-grid">
+            {homeContent.upcomingEvents.events.map((event) => (
+              <div key={event.id} className="event-card">
+                <div className="event-date">
+                  <svg
+                    stroke="currentColor"
+                    fill="currentColor"
+                    strokeWidth="0"
+                    viewBox="0 0 448 512"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"></path>
+                  </svg>
+                  <span>{event.date}</span>
+                </div>
+                <h3>{event.title}</h3>
+                <div className="event-details">
+                  <span>{event.time}</span>
+                  <span className="event-type">{event.type}</span>
+                </div>
+                <Link
+                  to={event.link}
+                  className="btn btn-outline"
+                  data-discover="true"
+                >
+                  Join Event
+                </Link>
               </div>
-              <h3>{event.title}</h3>
-              <div className="event-details">
-                <span>{event.time}</span>
-                <span className="event-type">{event.type}</span>
-              </div>
-              <Link to="/events" className="btn btn-outline">
-                Join Event
-              </Link>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className="view-all-events">
+            <Link
+              to="/events"
+              className="btn btn-secondary"
+              data-discover="true"
+            >
+              View All Events
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 448 512"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path>
+              </svg>
+            </Link>
+          </div>
         </div>
-        
-        <div className="view-all-events">
-          <Link to="/events" className="btn btn-secondary">
-            View All Events <FaArrowRight />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-// Testimonials Section
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      quote: "Beyond the Book completely transformed my reading experience. I've found amazing book recommendations and made friends who share my passion for mystery novels.",
-      author: "Emma T.",
-      location: "New York, USA"
-    },
-    {
-      quote: "The author engagement sessions are incredible! Being able to ask questions directly to my favorite writers has been such a rewarding experience.",
-      author: "Michael L.",
-      location: "London, UK"
-    },
-    {
-      quote: "I've been part of the sci-fi book club for 6 months now, and it's the highlight of my week. The discussions are insightful and have deepened my appreciation for the genre.",
-      author: "Priya M.",
-      location: "Toronto, Canada"
-    }
-  ];
-
-  return (
-    <section className="testimonials-section">
-      <div className="container">
-        <h2>What Our Members Say</h2>
-        
+      {/* Testimonials Section */}
+      <section className="testimonials">
+        <h2 className="section-title">What Our Members Say</h2>
         <div className="testimonials-grid">
-          {testimonials.map((testimonial, index) => (
-            <div className="testimonial-card" key={index}>
-              <div className="quote-icon">"</div>
-              <p className="testimonial-quote">{testimonial.quote}</p>
+          {homeContent.testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="testimonial-card">
+              <img
+                src={testimonial.image}
+                alt={testimonial.name}
+                className="testimonial-image"
+              />
+              <blockquote>{testimonial.quote}</blockquote>
               <div className="testimonial-author">
-                <span className="author-name">{testimonial.author}</span>
-                <span className="author-location">{testimonial.location}</span>
+                <h4>{testimonial.name}</h4>
+                <p>{testimonial.role}</p>
               </div>
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-// Call to Action Section
-function CtaSection() {
-  return (
-    <section className="cta-section">
-      <div className="container">
-        <h2>Ready to Begin Your Reading Journey?</h2>
-        <p>Join thousands of readers who have found their literary home with Beyond the Book.</p>
-        <div className="cta-buttons">
-          <Link to="/auth/register" className="btn btn-primary">
-            Sign Up Now
-          </Link>
-          <Link to="/book-clubs" className="btn btn-secondary">
-            Explore Book Clubs
+      {/* CTA Section */}
+      <section className="cta">
+        <div className="cta-content">
+          <h2>{homeContent.cta.title}</h2>
+          <p>{homeContent.cta.description}</p>
+          <Link to={homeContent.cta.button.link} className="btn primary">
+            {homeContent.cta.button.text}
           </Link>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
-}
-
-// Footer
-// function Footer() {
-//   return (
-//     <footer className="footer">
-//       <div className="container">
-//         <div className="footer-content">
-//           <div className="footer-brand">
-//             <Link to="/" className="footer-logo">
-//               Beyond the Book
-//             </Link>
-//             <p>Connecting readers, one page at a time.</p>
-//           </div>
-          
-//           <div className="footer-links">
-//             <div className="footer-links-column">
-//               <h3>Explore</h3>
-//               <ul>
-//                 <li><Link to="/book-clubs">Book Clubs</Link></li>
-//                 <li><Link to="/recommendations">Recommendations</Link></li>
-//                 <li><Link to="/author-engagement">Author Engagement</Link></li>
-//                 <li><Link to="/book-marketplace">Marketplace</Link></li>
-//               </ul>
-//             </div>
-            
-//             <div className="footer-links-column">
-//               <h3>Community</h3>
-//               <ul>
-//                 <li><Link to="/events">Events</Link></li>
-//                 <li><Link to="/forums">Forums</Link></li>
-//                 <li><Link to="/blog">Blog</Link></li>
-//                 <li><Link to="/faq">FAQ</Link></li>
-//               </ul>
-//             </div>
-            
-//             <div className="footer-links-column">
-//               <h3>Account</h3>
-//               <ul>
-//                 <li><Link to="/auth/login">Login</Link></li>
-//                 <li><Link to="/auth/register">Register</Link></li>
-//                 <li><Link to="/dashboard">Dashboard</Link></li>
-//                 <li><Link to="/profile">Profile</Link></li>
-//               </ul>
-//             </div>
-//           </div>
-//         </div>
-        
-//         <div className="footer-bottom">
-//           <p>© 2025 Beyond the Book. All rights reserved.</p>
-//           <div className="footer-legal">
-//             <Link to="/privacy">Privacy Policy</Link>
-//             <Link to="/terms">Terms of Service</Link>
-//           </div>
-//         </div>
-//       </div>
-//     </footer>
-//   );
-// }
+};
 
 export default Home;

@@ -1,0 +1,13 @@
+{
+  "name": "beyond-the-book",
+  "version": "1.0.0",
+  "description": "A platform for book lovers to connect and share",
+  "scripts": {
+    "start": "cd frontend && npm start",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

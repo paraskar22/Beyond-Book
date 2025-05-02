@@ -5,36 +5,30 @@ function AuthorEngagement() {
   const [events] = useState([
     {
       id: 1,
-      title: "Virtual Book Launch: The Last Chapter",
+      title: "Book Launch: The Last Chapter",
       author: "Sarah Johnson",
-      date: "2024-04-15",
+      date: "June 10, 2023",
       time: "7:00 PM EST",
-      type: "Book Launch",
-      description:
-        "Join us for the virtual launch of Sarah Johnson's latest novel, followed by a Q&A session.",
-      image: "/images/event1.jpg",
+      type: "Virtual Launch",
+      image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     },
     {
       id: 2,
-      title: "Writing Workshop with James Wilson",
-      author: "James Wilson",
-      date: "2024-04-20",
-      time: "2:00 PM EST",
-      type: "Workshop",
-      description:
-        "Learn the art of character development in this interactive writing workshop.",
-      image: "/images/event2.jpg",
+      title: "Q&A Session with Mystery Writers",
+      author: "Michael Chen, Lisa Rodriguez",
+      date: "June 15, 2023",
+      time: "8:00 PM EST",
+      type: "Panel Discussion",
+      image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     },
     {
       id: 3,
-      title: "Author Meet & Greet: Science Fiction Panel",
-      author: "Multiple Authors",
-      date: "2024-04-25",
+      title: "Writing Workshop: Crafting Memorable Characters",
+      author: "Emily Parker",
+      date: "June 20, 2023",
       time: "6:00 PM EST",
-      type: "Panel Discussion",
-      description:
-        "A panel discussion with leading science fiction authors about the future of the genre.",
-      image: "/images/event3.jpg",
+      type: "Workshop",
+      image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     },
   ]);
 

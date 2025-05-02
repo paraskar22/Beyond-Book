@@ -4,18 +4,18 @@
   align-items: center;
   justify-content: center;
   background-color: #f8f9fa;
+  padding: 2rem;
 }
 
 .auth-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .auth-content {
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
 }

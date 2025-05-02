@@ -1,91 +1,52 @@
-import React, { useState } from "react";
-import "./Recommendations.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Recommendations.css';
 
-function Recommendations() {
-  const [recommendations] = useState([
+const Recommendations = () => {
+  const recommendations = [
     {
       id: 1,
       title: "The Midnight Library",
       author: "Matt Haig",
-      genre: "Fantasy",
-      rating: 4.5,
-      description:
-        "A library between life and death, and the infinite possibilities of being.",
-      coverImage: "/images/book1.jpg",
+      coverImage: "https://images-na.ssl-images-amazon.com/images/I/81YkqyaFVEL._AC_UL600_SR600,600_.jpg",
+      description: "A dazzling novel about all the choices that go into a life well lived."
     },
     {
       id: 2,
       title: "Project Hail Mary",
       author: "Andy Weir",
-      genre: "Science Fiction",
-      rating: 4.8,
-      description:
-        "A lone astronaut must save humanity from a catastrophic event.",
-      coverImage: "/images/book2.jpg",
+      coverImage: "https://images-na.ssl-images-amazon.com/images/I/91p5b0UgbKL._AC_UL600_SR600,600_.jpg",
+      description: "A lone astronaut must save the earth from disaster in this incredible new science-based thriller."
     },
     {
       id: 3,
       title: "Klara and the Sun",
       author: "Kazuo Ishiguro",
-      genre: "Literary Fiction",
-      rating: 4.3,
-      description:
-        "An AI's quest to understand the complexities of human love.",
-      coverImage: "/images/book3.jpg",
-    },
-  ]);
+      coverImage: "https://images-na.ssl-images-amazon.com/images/I/81Kc8OsbDxL._AC_UL600_SR600,600_.jpg",
+      description: "A magnificent new novel from the Nobel laureate Kazuo Ishiguro."
+    }
+  ];
 
   return (
     <div className="recommendations">
-      <header className="recommendations-header">
-        <h1>Book Recommendations</h1>
-        <p>
-          Personalized book suggestions based on your reading history and
-          preferences
-        </p>
-      </header>
-
-      <div className="filters">
-        <select className="filter-select">
-          <option value="">All Genres</option>
-          <option value="fiction">Fiction</option>
-          <option value="non-fiction">Non-Fiction</option>
-          <option value="science-fiction">Science Fiction</option>
-          <option value="fantasy">Fantasy</option>
-        </select>
-        <select className="filter-select">
-          <option value="">Sort By</option>
-          <option value="rating">Rating</option>
-          <option value="newest">Newest</option>
-          <option value="popular">Most Popular</option>
-        </select>
-      </div>
-
+      <h1>Book Recommendations</h1>
       <div className="recommendations-grid">
         {recommendations.map((book) => (
           <div key={book.id} className="book-card">
-            <div className="book-cover">
-              <img src={book.coverImage} alt={book.title} />
-            </div>
+            <img src={book.coverImage} alt={book.title} className="book-cover" />
             <div className="book-info">
-              <h3>{book.title}</h3>
+              <h2>{book.title}</h2>
               <p className="author">by {book.author}</p>
-              <p className="genre">{book.genre}</p>
-              <div className="rating">
-                <span>★</span>
-                <span>{book.rating}</span>
-              </div>
               <p className="description">{book.description}</p>
-              <div className="book-actions">
-                <button className="btn primary">Add to Reading List</button>
-                <button className="btn secondary">View Details</button>
-              </div>
+              <Link to={`/book/${book.id}`} className="btn primary">
+                View Details
+              </Link>
             </div>
           </div>
         ))}
       </div>
     </div>
   );
-}
+};
 
 export default Recommendations;

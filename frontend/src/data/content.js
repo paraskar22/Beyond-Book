@@ -1,3 +1,33 @@
+import bookClubsImage from '../assets/images/book-clubs.jpeg';
+import recommendationsImage from '../assets/images/recommendations.jpg';
+import authorEngagementImage from '../assets/images/author-engagement.jpeg';
+import bookMarketplaceImage from '../assets/images/book-marketplace.jpeg';
+import classicLiteratureImage from '../assets/images/classic-literature.jpeg';
+import sciFiImage from '../assets/images/sci-fi.jpeg';
+import mysteryImage from '../assets/images/mystery-category.jpeg';
+import poetryImage from '../assets/images/poetry.jpg';
+import fictionImage from '../assets/images/fiction.jpeg';
+import nonFictionImage from '../assets/images/non-fiction.jpeg';
+import mysteryCategoryImage from '../assets/images/mystery-category.jpeg';
+import sciFiCategoryImage from '../assets/images/sci-fi-category.jpeg';
+import romanceImage from '../assets/images/romance.jpeg';
+import biographyImage from '../assets/images/biography.png';
+import midnightLibraryImage from '../assets/images/midnight-library.jpeg';
+import projectHailMaryImage from '../assets/images/project-hail-mary.jpeg';
+import sevenHusbandsImage from '../assets/images/seven-husbands.jpeg';
+import atomicHabitsImage from '../assets/images/atomic-habits.jpeg';
+import bookLaunchImage from '../assets/images/book-launch.jpeg';
+import qaSessionImage from '../assets/images/qa-session.jpeg';
+import writingWorkshopImage from '../assets/images/writing-workshop.jpeg';
+import sarahJohnsonImage from '../assets/images/sarah-johnson.jpeg';
+import michaelChenImage from '../assets/images/michael-chen.jpeg';
+import emilyParkerImage from '../assets/images/emily-parker.jpeg';
+import greatGatsbyImage from '../assets/images/great-gatsby.jpeg';
+import mockingbirdImage from '../assets/images/mockingbird.jpeg';
+import nineteenEightyFourImage from '../assets/images/1984.jpeg';
+import hobbitImage from '../assets/images/hobbit.jpeg';
+import userAvatarImage from '../assets/images/user-avatar.png';
+
 // Home page content
 export const homeContent = {
   hero: {
@@ -7,7 +37,18 @@ export const homeContent = {
       "Join our community of readers, discover new books, and connect with fellow book enthusiasts.",
     primaryButton: "Get Started",
     secondaryButton: "Learn More",
-    backgroundImage: "/images/hero-bg.jpg",
+    ctaButtons: [
+      {
+        text: "Get Started",
+        link: "/auth/register",
+        variant: "primary",
+      },
+      {
+        text: "Learn More",
+        link: "/features",
+        variant: "secondary",
+      },
+    ],
   },
   features: [
     {
@@ -16,7 +57,8 @@ export const homeContent = {
       description:
         "Join or create book clubs to discuss your favorite reads with like-minded readers.",
       icon: "📚",
-      image: "/images/book-clubs.jpg",
+      image: bookClubsImage,
+      link: "/book-clubs",
     },
     {
       id: 2,
@@ -24,7 +66,8 @@ export const homeContent = {
       description:
         "Get personalized book recommendations based on your reading history and preferences.",
       icon: "🎯",
-      image: "/images/recommendations.jpg",
+      image: recommendationsImage,
+      link: "/recommendations",
     },
     {
       id: 3,
@@ -32,7 +75,8 @@ export const homeContent = {
       description:
         "Connect with authors through virtual events, Q&A sessions, and exclusive content.",
       icon: "✍️",
-      image: "/images/author-engagement.jpg",
+      image: authorEngagementImage,
+      link: "/author-engagement",
     },
     {
       id: 4,
@@ -40,14 +84,86 @@ export const homeContent = {
       description:
         "Buy, sell, and exchange books with other members of the community.",
       icon: "🛍️",
-      image: "/images/book-marketplace.jpg",
+      image: bookMarketplaceImage,
+      link: "/marketplace",
+    },
+  ],
+  stats: {
+    members: "10,000+",
+    books: "50,000+",
+    clubs: "500+",
+    events: "1,000+",
+  },
+  readingChallenges: {
+    title: "Join Our Reading Challenges",
+    description: "Participate in exciting reading challenges and earn badges",
+    challenges: [
+      {
+        id: 1,
+        title: "Summer Reading Challenge",
+        books: 10,
+        badge: "🌞",
+      },
+      {
+        id: 2,
+        title: "Classic Literature",
+        books: 5,
+        badge: "📚",
+      },
+      {
+        id: 3,
+        title: "Around the World",
+        books: 7,
+        badge: "🌍",
+      },
+    ],
+  },
+  upcomingEvents: {
+    title: "Upcoming Events",
+    description: "Join our virtual book discussions and author meetups",
+    events: [
+      {
+        id: 1,
+        title: "Book Club Discussion",
+        date: "June 15, 2023",
+        time: "7:00 PM EST",
+        type: "Virtual",
+        link: "/events/book-club-discussion",
+      },
+      {
+        id: 2,
+        title: "Author Q&A Session",
+        date: "June 20, 2023",
+        time: "8:00 PM EST",
+        type: "Virtual",
+        link: "/events/author-qa",
+      },
+    ],
+  },
+  testimonials: [
+    {
+      id: 1,
+      name: "Sarah Johnson",
+      role: "Book Club Member",
+      quote: "This platform has transformed my reading experience!",
+      image: "https://i.pravatar.cc/150?img=1",
+    },
+    {
+      id: 2,
+      name: "Michael Chen",
+      role: "Author",
+      quote: "Great way to connect with readers!",
+      image: "https://i.pravatar.cc/150?img=2",
     },
   ],
   cta: {
     title: "Ready to Start Your Reading Journey?",
     description:
       "Join thousands of book lovers who have already discovered the joy of reading together.",
-    button: "Sign Up Now",
+    button: {
+      text: "Sign Up Now",
+      link: "/auth/register"
+    }
   },
 };
 
@@ -63,7 +179,7 @@ export const bookClubsContent = {
       name: "Classic Literature Enthusiasts",
       description: "A group dedicated to exploring timeless literary works.",
       members: 156,
-      image: "/images/classic-literature.jpg",
+      image: classicLiteratureImage,
       nextMeeting: "May 15, 2023",
       reading: "Pride and Prejudice by Jane Austen",
     },
@@ -73,7 +189,7 @@ export const bookClubsContent = {
       description:
         "Discover the wonders of science fiction and fantasy literature.",
       members: 203,
-      image: "/images/sci-fi.jpg",
+      image: sciFiImage,
       nextMeeting: "May 20, 2023",
       reading: "Dune by Frank Herbert",
     },
@@ -83,7 +199,7 @@ export const bookClubsContent = {
       description:
         "Uncover the best mysteries and thrillers in contemporary literature.",
       members: 178,
-      image: "/images/mystery.jpg",
+      image: mysteryImage,
       nextMeeting: "May 18, 2023",
       reading: "The Silent Patient by Alex Michaelides",
     },
@@ -93,7 +209,7 @@ export const bookClubsContent = {
       description:
         "Celebrate the beauty of poetry through shared readings and discussions.",
       members: 92,
-      image: "/images/poetry.jpg",
+      image: poetryImage,
       nextMeeting: "May 22, 2023",
       reading: "The Sun and Her Flowers by Rupi Kaur",
     },
@@ -111,32 +227,32 @@ export const recommendationsContent = {
     {
       id: 1,
       name: "Fiction",
-      image: "/images/fiction.jpg",
+      image: fictionImage,
     },
     {
       id: 2,
       name: "Non-Fiction",
-      image: "/images/non-fiction.jpg",
+      image: nonFictionImage,
     },
     {
       id: 3,
       name: "Mystery",
-      image: "/images/mystery-category.jpg",
+      image: mysteryCategoryImage,
     },
     {
       id: 4,
       name: "Science Fiction",
-      image: "/images/sci-fi-category.jpg",
+      image: sciFiCategoryImage,
     },
     {
       id: 5,
       name: "Romance",
-      image: "/images/romance.jpg",
+      image: romanceImage,
     },
     {
       id: 6,
       name: "Biography",
-      image: "/images/biography.jpg",
+      image: biographyImage,
     },
   ],
   recommendedBooks: [
@@ -146,7 +262,7 @@ export const recommendationsContent = {
       author: "Matt Haig",
       genre: "Fiction",
       rating: 4.5,
-      image: "/images/midnight-library.jpg",
+      image: midnightLibraryImage,
       description:
         "Between life and death there is a library, and within that library, the shelves go on forever.",
     },
@@ -156,7 +272,7 @@ export const recommendationsContent = {
       author: "Andy Weir",
       genre: "Science Fiction",
       rating: 4.8,
-      image: "/images/project-hail-mary.jpg",
+      image: projectHailMaryImage,
       description:
         "A lone astronaut must save humanity from a catastrophic extinction event.",
     },
@@ -166,7 +282,7 @@ export const recommendationsContent = {
       author: "Taylor Jenkins Reid",
       genre: "Historical Fiction",
       rating: 4.6,
-      image: "/images/seven-husbands.jpg",
+      image: sevenHusbandsImage,
       description:
         "Aging and reclusive Hollywood movie icon Evelyn Hugo is finally ready to tell the truth about her glamorous and scandalous life.",
     },
@@ -176,7 +292,7 @@ export const recommendationsContent = {
       author: "James Clear",
       genre: "Self-Help",
       rating: 4.7,
-      image: "/images/atomic-habits.jpg",
+      image: atomicHabitsImage,
       description: "An Easy & Proven Way to Build Good Habits & Break Bad Ones",
     },
   ],
@@ -197,7 +313,7 @@ export const authorEngagementContent = {
       date: "June 10, 2023",
       time: "7:00 PM EST",
       type: "Virtual Launch",
-      image: "/images/book-launch.jpg",
+      image: bookLaunchImage,
       description:
         "Join us for the virtual launch of Sarah Johnson's latest novel, The Last Chapter.",
     },
@@ -208,7 +324,7 @@ export const authorEngagementContent = {
       date: "June 15, 2023",
       time: "8:00 PM EST",
       type: "Panel Discussion",
-      image: "/images/qa-session.jpg",
+      image: qaSessionImage,
       description:
         "Join bestselling mystery authors Michael Chen and Lisa Rodriguez for an exclusive Q&A session.",
     },
@@ -219,7 +335,7 @@ export const authorEngagementContent = {
       date: "June 20, 2023",
       time: "6:00 PM EST",
       type: "Workshop",
-      image: "/images/writing-workshop.jpg",
+      image: writingWorkshopImage,
       description:
         "Learn the art of creating memorable characters with award-winning author Emily Parker.",
     },
@@ -229,21 +345,21 @@ export const authorEngagementContent = {
       id: 1,
       name: "Sarah Johnson",
       genre: "Literary Fiction",
-      image: "/images/sarah-johnson.jpg",
+      image: sarahJohnsonImage,
       bio: "Sarah Johnson is the author of five novels, including the bestselling 'The Silent Echo'.",
     },
     {
       id: 2,
       name: "Michael Chen",
       genre: "Mystery",
-      image: "/images/michael-chen.jpg",
+      image: michaelChenImage,
       bio: "Michael Chen has written over a dozen mystery novels and is known for his intricate plots.",
     },
     {
       id: 3,
       name: "Emily Parker",
       genre: "Contemporary Fiction",
-      image: "/images/emily-parker.jpg",
+      image: emilyParkerImage,
       bio: "Emily Parker's novels have been translated into 20 languages and have won numerous awards.",
     },
   ],
@@ -265,7 +381,7 @@ export const bookMarketplaceContent = {
       price: "$8.99",
       seller: "BookLover123",
       location: "New York, NY",
-      image: "/images/great-gatsby.jpg",
+      image: greatGatsbyImage,
     },
     {
       id: 2,
@@ -275,7 +391,7 @@ export const bookMarketplaceContent = {
       price: "$6.50",
       seller: "ReaderForever",
       location: "Los Angeles, CA",
-      image: "/images/mockingbird.jpg",
+      image: mockingbirdImage,
     },
     {
       id: 3,
@@ -285,7 +401,7 @@ export const bookMarketplaceContent = {
       price: "$7.25",
       seller: "Bookworm42",
       location: "Chicago, IL",
-      image: "/images/1984.jpg",
+      image: nineteenEightyFourImage,
     },
     {
       id: 4,
@@ -295,7 +411,7 @@ export const bookMarketplaceContent = {
       price: "$9.99",
       seller: "FantasyFan",
       location: "Seattle, WA",
-      image: "/images/hobbit.jpg",
+      image: hobbitImage,
     },
   ],
 };
@@ -306,7 +422,7 @@ export const userProfileContent = {
     name: "Alex Thompson",
     email: "alex.thompson@example.com",
     memberSince: "January 2023",
-    avatar: "/images/user-avatar.jpg",
+    avatar: userAvatarImage,
   },
   readingStats: {
     booksRead: 42,

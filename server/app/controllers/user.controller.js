@@ -65,87 +65,97 @@ exports.login = (req, res) => {
 };
 
 exports.getUserProfile = (req, res) => {
-  const id = req.params.id;
-
-  User.findById(id, (err, user) => {
+  const userId = req.params.id;
+  
+  User.findById(userId, (err, user) => {
     if (err) {
       res.status(500).send({
-        message: "Error retrieving user profile.",
+        message: "Error retrieving user profile"
       });
-    } else {
-      res.send({
-        user,
-      });
+      return;
     }
+    
+    if (!user) {
+      res.status(404).send({
+        message: "User not found"
+      });
+      return;
+    }
+    
+    res.send(user);
   });
 };
 
 exports.updateUserProfile = (req, res) => {
-  const id = req.params.id;
-
+  const userId = req.params.id;
+  
   if (!req.body) {
     res.status(400).send({
-      message: "Content cannot be empty!",
+      message: "Content cannot be empty!"
     });
+    return;
   }
 
   const updatedUser = {
     name: req.body.name,
     userName: req.body.userName,
-    email: req.body.email,
+    email: req.body.email
   };
 
-  User.updateProfileById(id, updatedUser, (err, data) => {
+  User.updateById(userId, updatedUser, (err, data) => {
     if (err) {
       res.status(500).send({
-        message: "Error updating user profile.",
+        message: "Error updating user profile"
       });
-    } else {
-      res.send({
-        message: "User profile updated successfully.",
-        data,
-      });
+      return;
     }
+    
+    res.send({
+      message: "User profile updated successfully",
+      data: data
+    });
   });
 };
 
 exports.updateUserPassword = (req, res) => {
-  const id = req.params.id;
-  const { password } = req.body;
-
-  if (!password) {
+  const userId = req.params.id;
+  
+  if (!req.body.password) {
     res.status(400).send({
-      message: "Password is required!",
+      message: "Password cannot be empty!"
     });
+    return;
   }
 
-  User.updatePasswordById(id, password, (err, data) => {
+  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  
+  User.updatePassword(userId, hashedPassword, (err, data) => {
     if (err) {
       res.status(500).send({
-        message: "Error updating password.",
+        message: "Error updating password"
       });
-    } else {
-      res.send({
-        message: "Password updated successfully.",
-        data,
-      });
+      return;
     }
+    
+    res.send({
+      message: "Password updated successfully"
+    });
   });
 };
 
 exports.deleteUser = (req, res) => {
-  const id = req.params.id;
-
-  User.remove(id, (err, data) => {
+  const userId = req.params.id;
+  
+  User.remove(userId, (err, data) => {
     if (err) {
       res.status(500).send({
-        message: "Could not delete user.",
+        message: "Error deleting user"
       });
-    } else {
-      res.send({
-        message: "User deleted successfully.",
-        data,
-      });
+      return;
     }
+    
+    res.send({
+      message: "User deleted successfully"
+    });
   });
 };

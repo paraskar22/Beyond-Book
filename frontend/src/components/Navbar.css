@@ -72,7 +72,7 @@
 }
 
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -234,11 +234,11 @@
   .desktop-nav {
     display: none;
   }
-  
+
   .mobile-menu-btn {
     display: flex;
   }
-  
+
   .navbar-container {
     padding: 0 1rem;
   }
@@ -248,16 +248,16 @@
   .navbar-logo {
     font-size: 1.2rem;
   }
-  
+
   .mobile-nav {
     padding: 1.5rem;
   }
-  
+
   .mobile-nav .nav-link {
     font-size: 1.1rem;
     padding: 0.7rem 0;
   }
-  
+
   .mobile-nav .auth-button {
     padding: 0.7rem;
     font-size: 0.9rem;

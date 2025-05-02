@@ -1,6 +1,7 @@
 .register-form-container {
   max-width: 400px;
-  margin: 2rem auto;
+  width: 100%;
+  margin: 0 auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 8px;
@@ -11,16 +12,18 @@
   text-align: center;
   color: #333;
   margin-bottom: 1.5rem;
+  font-size: 1.8rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   color: #555;
+  font-weight: 500;
 }
 
 .form-group input {
@@ -29,10 +32,13 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .password-input-container {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .password-toggle {
@@ -44,19 +50,29 @@
   border: none;
   color: #666;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
 }
 
 .password-toggle:hover {
   color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 .password-toggle:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
 }
 
 .form-group input:focus {
@@ -73,12 +89,18 @@
   border: none;
   border-radius: 4px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .submit-button:hover {
   background-color: #0056b3;
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .error-message {
@@ -92,15 +114,18 @@
 }
 
 .form-links {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   text-align: center;
 }
 
 .form-links a {
   color: #007bff;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .form-links a:hover {
+  color: #0056b3;
   text-decoration: underline;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import UserService from "../../services/UserService.ts";
+import { useAuth } from "../../hooks/useAuth";
 import {
   validateEmail,
   validatePassword,
@@ -23,20 +23,7 @@ const RegisterForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = () => {
-      try {
-        const user = UserService.getCurrentUser();
-        if (user) {
-          navigate("/dashboard");
-        }
-      } catch (error) {
-        console.error("Error checking authentication:", error);
-      }
-    };
-    checkAuth();
-  }, [navigate]);
+  const { register } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,19 +68,14 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await UserService.register(
+      await register(
         formData.name,
         formData.userName,
         formData.email,
         formData.password
       );
-
-      if (response.success) {
-        toast.success("Registration successful!");
-        navigate("/dashboard");
-      } else {
-        throw new Error(response.message || "Registration failed");
-      }
+      toast.success("Registration successful! Please login.");
+      navigate("/auth/login");
     } catch (err) {
       console.error("Registration error:", err);
       const errorMessage =
@@ -123,6 +105,8 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
             disabled={loading}
+            autoComplete="name"
+            aria-label="Full name"
           />
         </div>
 
@@ -136,6 +120,8 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
             disabled={loading}
+            autoComplete="username"
+            aria-label="Username"
           />
         </div>
 
@@ -149,6 +135,8 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
             disabled={loading}
+            autoComplete="email"
+            aria-label="Email address"
           />
         </div>
 
@@ -163,12 +151,15 @@ const RegisterForm = () => {
               onChange={handleChange}
               required
               disabled={loading}
+              autoComplete="new-password"
+              aria-label="Password"
             />
             <button
               type="button"
               className="password-toggle"
               onClick={() => setShowPassword(!showPassword)}
               disabled={loading}
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -186,12 +177,17 @@ const RegisterForm = () => {
               onChange={handleChange}
               required
               disabled={loading}
+              autoComplete="new-password"
+              aria-label="Confirm password"
             />
             <button
               type="button"
               className="password-toggle"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               disabled={loading}
+              aria-label={
+                showConfirmPassword ? "Hide password" : "Show password"
+              }
             >
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>

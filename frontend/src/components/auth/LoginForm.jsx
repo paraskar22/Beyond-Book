@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import "./LoginForm.css";
 import { toast } from "react-toastify";
 
 const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,13 +39,16 @@ const LoginForm = () => {
       toast.success("Login successful!");
       navigate("/dashboard");
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.message || "Invalid credentials. Please check your email and password.";
+      const errorMessage =
+        err.response?.data?.error ||
+        err.message ||
+        "Invalid credentials. Please check your email and password.";
       setError(errorMessage);
       toast.error(errorMessage);
-      console.error('Login error details:', {
+      console.error("Login error details:", {
         status: err.response?.status,
         data: err.response?.data,
-        message: err.message
+        message: err.message,
       });
     } finally {
       setLoading(false);
@@ -65,27 +70,48 @@ const LoginForm = () => {
             onChange={handleChange}
             required
             disabled={loading}
+            autoComplete="email"
+            aria-label="Email address"
           />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              autoComplete="current-password"
+              aria-label="Password"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              disabled={loading}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
       <div className="form-links">
-        <Link to="/auth/forgot-password">Forgot Password?</Link>
-        <Link to="/auth/register">Don't have an account? Register</Link>
+        <div className="form-link-item">
+          <Link to="/auth/forgot-password">Forgot Password?</Link>
+        </div>
+        <div className="form-link-item">
+          <Link to="/auth/register" className="register-link">
+            Don't have an account? <span>Register</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
